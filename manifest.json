@@ -1,0 +1,38 @@
+{
+  "name": "AHGL - Submitter",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "Easily create a valid lineup submission for StarCraft 2 using this extension. (Unofficial)",
+  "homepage_url": "https://battlefy.com/after-hours-gaming-league",
+  "icons": {
+    "128": "icons/icon128.png"
+  },
+  "browser_action": {
+    "default_icon": "icons/icon19.png",
+    "default_title": "AHGL",
+    "default_popup": "src/page_action/page_action.html"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "permissions": [
+    "storage",
+    "clipboardWrite",
+    "https://battlefy.com/after-hours-gaming-league/*"
+  ],
+  "background": {
+    "scripts" : ["src/background.js"],
+    "persistent" : false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://battlefy.com/after-hours-gaming-league/*"
+      ],
+      "css": [
+        "src/inject/inject.css"
+      ],
+      "js": [
+        "js/jquery-3.3.1.min.js", "js/watch.js", "src/inject/inject.js"
+      ]
+    }
+  ]
+}

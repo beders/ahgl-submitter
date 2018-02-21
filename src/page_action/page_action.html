@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+    <style type="text/css">
+        #app {
+            padding: 10px;
+            height: 900px;
+            width: 780px;
+        }
+
+        .info {
+            transition: none !important;
+        }
+
+        .flip-list-move {
+            transition: transform 0.7s;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css" type="text/css">
+    <script src="../../js/vue.min.js"></script>
+    <script src="page_action.js"></script>
+    <script type="text/x-template" id="players-list-template">
+        <div class="player-list">
+            <div class="field">
+                <label class="label">Team</label>
+                <div class="control">
+                    <input class="input" v-model="teamName" placeholder="Team name">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Match ID</label>
+                <div class="control">
+                    <input class="input" v-model="matchID" placeholder="Match ID">
+                </div>
+            </div>
+            <label class="label">Lineup</label>
+            <transition-group name="flip-list" tag="div">
+                <div v-for="(p, index) in players" v-bind:key="p">
+                    <!-- <div class="info" v-show="index==4">
+                      <p class="box is-outline has-text-grey" style="background-color: silver;" v-if="index==4">Reserve</p>
+                    </div> -->
+                    <div class="player field is-horizontal">
+                        <div class="field-label is-normal is-right-justified">
+                            <span v-show="index < 4">{{ index + 1 }}</span>
+                            <span v-show="index >= 4 ">Reserve</span>
+                        </div>
+                        <div class="field-body">
+                            <div class="field"><input class="input" v-model="p.name" placeholder="name"></input></div>
+                            <div class="field is-narrow">
+                                <div class="control">
+                                    <div class="select">
+                                        <select v-model="p.role">
+                                            <option v-for="r in roles[game]">{{r}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="buttons">
+                                <button @click="moveUp(index)" class="button" :disabled="index==0">&uarr;</button>
+                                <button @click="moveDown(index)" class="button" :disabled="index==players.length-1">
+                                    &darr;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition-group>
+            <section class="section">
+                <div class="field is-horizontal has-addons">
+                    <div class="control is-expanded">
+                        <input class="input lineup" type="text" placeholder="Lineup" v-model="lineupString">
+                    </div>
+                    <div class="control">
+                        <button @click="copyToClipboard" class="button is-info">
+                            Copy
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </script>
+</head>
+<body>
+<div id="app">
+    <nav class="level">
+  <!-- Left side -->
+  <div class="level-left">
+    <div class="level-item">
+        <span> AHGL SC2 Lineup Tool</span>
+    </div>
+  </div>
+        <div class="level-right">
+            <div class="level-item">
+                <a @click="saveAndClose" class="button">
+                    <span>Save and Close</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="notification is-primary" v-show="message">
+        <button class="delete" @click="dismiss"></button>
+        {{ message }}
+    </div>
+
+    <!-- <section class="section">
+        <div class="container">
+            <div class="buttons">
+                <button class="button" @click="prepare" title="Import team, match ID from Battlefy">Import Data</button>
+                <button class="button" @click="saveAndClose" title="Save current roster and team name to your browser">Save
+                </button>
+            </div>
+        </div>
+    </section> -->
+    <section class="">
+        <div class="container">
+            <players-list></players-list>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="level">
+            <span class="level-right">Made with &hearts; by beders</span>
+        </div>
+    </footer>
+
+    <div class="modal" :class="{ 'is-active': error }">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            {{ error }}
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+</div>
+
+</body>
+</html>
